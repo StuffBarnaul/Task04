@@ -1,3 +1,5 @@
+package Task04;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -5,11 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import org.springframework.util.ReflectionUtils;
 
-public class CleanUpClass<K> {
-
-    public CleanUpClass() {
-
-    }
+class CleanUpClass<K> {
 
     void cleanup(Object object, Set<String> fieldsToCleanup, Set<String> fieldsToOutput) {
         if (object instanceof Map) cleanMap(object, fieldsToCleanup, fieldsToOutput);
@@ -20,19 +18,13 @@ public class CleanUpClass<K> {
         Class clazz = object.getClass();
         try {
             for (String key:fieldsToCleanup) {
-                Method containsKeyMethod = clazz.getMethod("containsKey", Object.class);
-                containsKeyMethod.setAccessible(true);
-                Object b = containsKeyMethod.invoke(object,key);
-                if (b.equals(false)) {throw new IllegalArgumentException();}
+                isContains(key,object);
                 Method removeMethod = clazz.getMethod("remove", Object.class);
                 removeMethod.setAccessible(true);
                 removeMethod.invoke(object,key);
             }
             for (String key:fieldsToOutput){
-                Method containsKeyMethod = clazz.getMethod("containsKey", Object.class);
-                containsKeyMethod.setAccessible(true);
-                Object b = containsKeyMethod.invoke(object,key);
-                if (b.equals(false)) {throw new IllegalArgumentException();}
+                isContains(key,object);
                 Method getMethod = clazz.getMethod("get", Object.class);
                 getMethod.setAccessible(true);
                 System.out.println(getMethod.invoke(object,key));
@@ -46,7 +38,14 @@ public class CleanUpClass<K> {
         }
     }
 
+    private void isContains(String key, Object object) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method containsKeyMethod = object.getClass().getMethod("containsKey", Object.class);
+        containsKeyMethod.setAccessible(true);
+        if (containsKeyMethod.invoke(object,key).equals(false)) {throw new IllegalArgumentException();}
+    }
+
     private void cleanObject(final Object object, final Set<String> fieldsToCleanup, final Set<String> fieldsToOutput) {
+        
         ReflectionUtils.doWithFields(object.getClass(), new ReflectionUtils.FieldCallback() {
             public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
                 if (fieldsToCleanup.contains(field.getName())) {
