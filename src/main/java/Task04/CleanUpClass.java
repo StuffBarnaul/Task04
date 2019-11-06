@@ -45,7 +45,16 @@ class CleanUpClass<K> {
     }
 
     private void cleanObject(final Object object, final Set<String> fieldsToCleanup, final Set<String> fieldsToOutput) {
-        
+        for (String field:fieldsToCleanup){
+            if (ReflectionUtils.findField(object.getClass(),field) == null) {
+                throw new IllegalArgumentException();
+            }
+        }
+        for (String field:fieldsToOutput){
+            if (ReflectionUtils.findField(object.getClass(),field) == null) {
+                throw new IllegalArgumentException();
+            }
+        }
         ReflectionUtils.doWithFields(object.getClass(), new ReflectionUtils.FieldCallback() {
             public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
                 if (fieldsToCleanup.contains(field.getName())) {
