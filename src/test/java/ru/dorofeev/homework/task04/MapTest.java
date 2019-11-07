@@ -1,9 +1,8 @@
-package Task04;
+package ru.dorofeev.homework.task04;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

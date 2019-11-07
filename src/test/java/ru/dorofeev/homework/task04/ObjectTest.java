@@ -1,4 +1,4 @@
-package Task04;
+package ru.dorofeev.homework.task04;
 
 import org.junit.Before;
 import org.junit.Test;

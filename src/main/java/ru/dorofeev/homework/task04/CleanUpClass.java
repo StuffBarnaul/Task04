@@ -1,4 +1,4 @@
-package Task04;
+package ru.dorofeev.homework.task04;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -33,7 +33,7 @@ class CleanUpClass {
                 getMethod.setAccessible(true);
                 System.out.println(getMethod.invoke(object,key));
             }
-        } catch (NoSuchMethodException e) {
+        } catch (NoSuchMethodException e ) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();

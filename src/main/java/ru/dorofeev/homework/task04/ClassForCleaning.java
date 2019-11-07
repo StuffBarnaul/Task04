@@ -1,4 +1,4 @@
-package Task04;
+package ru.dorofeev.homework.task04;
 
 import java.util.ArrayList;
 import java.util.HashSet;
