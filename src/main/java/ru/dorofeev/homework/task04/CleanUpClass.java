@@ -49,29 +49,43 @@ class CleanUpClass {
     }
 
     private void cleanObject(final Object object, final Set<String> fieldsToCleanup, final Set<String> fieldsToOutput, final Set<String> mySet) {
-        for (String field:mySet){
-            if (ReflectionUtils.findField(object.getClass(),field) == null) {
+        for (String myfield : mySet) {
+            try {
+                object.getClass().getDeclaredField(myfield);
+            } catch (NoSuchFieldException e) {
                 throw new IllegalArgumentException();
             }
         }
-        ReflectionUtils.doWithFields(object.getClass(), new ReflectionUtils.FieldCallback() {
-            public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
-                if (fieldsToCleanup.contains(field.getName())) {
-                    if (field.getType().isPrimitive()){
-                        field.set(object,0);
-                    } else {
-                        field.set(object,null);
-                    }
+        for (String field : fieldsToCleanup) {
+            try {
+                Field objectfield = object.getClass().getDeclaredField(field);
+                objectfield.setAccessible(true);
+                if (objectfield.getType().isPrimitive()) {
+                    objectfield.set(object, 0);
+                } else {
+                    objectfield.set(object, null);
                 }
-                if (fieldsToOutput.contains(field.getName())) {
-                    if (field.getType().isPrimitive()){
-                        System.out.println(String.valueOf(field.get(object)));
-                    } else {
-                        String s = field.get(object).toString();
-                        System.out.println(s);
-                    }
-                }
+            } catch (NoSuchFieldException e) {
+                throw new IllegalArgumentException();
+            } catch (IllegalAccessException e) {
+                System.out.println("No access to variable");
             }
-        });
+        }
+        for (String field : fieldsToOutput) {
+            try {
+                Field objectfield = object.getClass().getDeclaredField(field);
+                objectfield.setAccessible(true);
+                if (objectfield.getType().isPrimitive()) {
+                    System.out.println(objectfield.get(object));
+                } else {
+                    String s = objectfield.get(object).toString();
+                    System.out.println(s);
+                }
+            } catch (NoSuchFieldException e) {
+                throw new IllegalArgumentException();
+            } catch (IllegalAccessException e) {
+                System.out.println("No access to variable");
+            }
+        }
     }
 }
